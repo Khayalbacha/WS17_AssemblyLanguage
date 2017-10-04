@@ -1,0 +1,40 @@
+==========================================================================
+EMU8086 - THE UPDATED LICENCE
+
+This software is designed to be as fault tolerant as possible, however
+it is not a toy and if you run an executable outside of the emulator 
+environment a specially crafted and compiled code can seriously
+damage your operating system, data and files. The warning is shown
+before any permanent damage may occur, unless the warning is manually
+turned off in emu8086.ini.
+
+Under no circumstances, the authors of the software may be subject to
+any form of legal liability for any problems, lack of suitability,
+damage or financial loss that arises from use of this software or
+software written with this software.
+
+EMU8086 is a legal mainstream software and cannot be used to create any
+form of illegal software whatsoever. The illegal software includes 
+while not being limited to software for hacking purposes, transmission
+of either virus or trojan content, infections, cyber weapons of mass
+destruction or any other software that performs actions prohibited 
+by the Digital Millennium Copyright Act (DMCA). Any such software 
+is deemed to be illegal software for the purposes of the content
+of this licence.
+
+The software is limited to 90 days of free evaluation period, if you
+continue to use this software after the evaluation period you must
+purchase it:
+
+https://www.regnow.com/softsell/nph-softsell.cgi?item=2189-7
+
+==========================================================================
+PLEASE NOTE:
+
+	Only if you agree to everything above,
+	you may unzip and rename SETUP.READ_LICENCE to SETUP.EXE
+
+	To unzip the file drag it to the desktop 
+	or any other location on your hard drive.
+==========================================================================
+

@@ -1,0 +1,214 @@
+
+emu8086 - assembler and emulator of Intel 8086 microprocessor (AMD compatible)
+
+version 3.27XL
+
+
+what's new:
+===========
+
+the step-back button allows to execute instructions backwards.
+
+font size of logical flag analyser can be modified in emu8086.ini
+
+the keyboard buffer is now visible and can be flushed with a click.
+
+it is possible to use _ to separate nibbles of long binary values,
+for example:      mov ax, 1000_0011_0001_1111b
+
+all devices are external, source codes of the devices can be found
+in this folder c:\emu8086\devices\developer\
+
+all ports from 0 to 65535 are free for custom i/o devices.
+
+all devices must be recompiled with new location of IO file.
+new location is: c:\emu8086.io 
+
+default code templates can be customised in c:\emu8086\inc 
+
+external button loads windows debug.exe after the compilation.
+
+default fonts for memory, emulator screen and disassembly
+are changed to Terminal, if your system does not have an appropriate
+Terminal font you can set it back to Fixedsys from options.
+
+far call is supported, see examples: far_call.asm and far_call_advanced.asm
+
+default output type for boot records is now .bin -- .boot output type
+is obsolete. .binf file has the information required for the emulator
+to know the loading prefix, for boot record it is 0000:7c00 (CS=0, IP=7c00).
+if there is no .binf file associated with .bin file, then default.binf
+is used by the emulator to determine where to load the binary file.
+
+recent files menu is not reset with other options.
+
+more ASCII extensions can be added to emu8086.ini, files that are
+considered ASCII are loaded into the source editor rather than the emulator.
+
+c:\emu8086\FLOPPY_0 - virtual floppy drive is empty by default,
+previously it was pre-loaded with micro operating system example.
+
+command prompt can be launched in output folder right after the compilation,
+or from emulator's view menu.
+
+seg directive returns cs when there are no defined segments.
+assembler automatically replaces code like this: mov dx, seg var1
+with this: mov dx, cs
+
+there is no practical use for this when compiling tiny and simple .com file,
+because it usually has only one segment and can relocate itself without
+the need of relocation tables.
+
+new interrupt function available INT 21h/43h - get/set file attributes.
+example is in c:\emu8086\examples\attrib.asm 
+
+mov dx, offset file ; zero terminated file name.
+mov ah, 43h
+
+mov al, 0  ; get attributes.
+mov al, 1  ; set attributes.
+
+; cx - attributes:
+
+ mov cx, 0       ;  normal - no attributes.
+ mov cx, 1       ;  read-only.
+ mov cx, 2       ;  hidden.
+ mov cx, 4       ;  system
+ mov cx, 7       ;  hidden, system & read-only.
+
+interrupt documentation is only partly updated, 
+this function is not documented yet, but there is
+an example in c:\emu8086\examples\attrib.asm 
+note: it may look like the file suddenly disappears unless you set 
+the settings of file manager to show system and hidden files.
+
+programs can be started in real environment - external button and menu.
+
+out instruction can be undone with step-back as well.
+
+moving cars added to traffic lights device, example: traffic_lights.asm
+
+automatic workaround for short relative jumps updated, to overcome
+jump limit of +/-127 bytes, short conditional jumps are replaced
+with the opposite instruction and one normal jump, then cpu just either 
+skips over normal jump, if original condition is false, or doesn't if
+original condition is true. for more information refer to tutorial 7.
+
+writebin.asm unitliy is updated, this little program can be used to 
+write bin file to boot record of a floppy drive and make it bootable.
+now it's possible to write a complete micro-operating system on a floppy
+drive. to use this utility you need to compile it first. it works from
+command line. to write a boot record type this:
+		writebin loader.bin
+to write kernel type this:
+		writebin kernel.bin /k
+this utility should be used with micro-operating system example:
+   micro-os_loader.asm       and       micro-os_kernel.asm
+however, it is not limited to these files and can be used with other
+files, for example it can be used to test timer.asm as well.
+
+double word definition is supported:
+
+mydoubles dd 12345678h
+
+; it is equal to:
+
+mywords   dw 5678h
+          dw 1234h
+
+;  or
+
+mybytes   db  78h
+          db  56h
+          db  34h
+          db  12h
+
+; exactly 32 bits
+binn dd 00010010001101000101011001111000b
+; load double word to dx:ax
+mov ax, binn
+mov dx, binn+2
+
+default vdrive path can be changed in emu8086.ini
+
+long jump is supported, for example:
+
+	jmp far addr
+
+	addr dd 1235:5124h
+
+correct working directory is set for debug.exe
+
+most of the file operations can be undone with step back.
+all file write operations are undone when file open function is undone.
+byte-by-byte undo is not allowed.
+
+major mouse driver interrupts are implemented.
+see mouse.asm and mouse2.asm in c:\emu8086\examples.
+
+new example of a simplest virtual device in pure assembly language is created.
+see simplest.asm in examples.
+
+new directive added:
+#start=mydevice.exe#
+the emulator starts the specified executable from c:\emu8086\devices\ folder
+when this directive is found in the original source code. 
+previous method of searching filenames in comments is obsolete.
+
+external debug.exe can be easily launched by F12 hotkey.
+it can be used along with the log button to check validity of the emulator if results are disputable.
+hotkey for the emulator's log button is F11.
+
+hardware interrupts are enabled.
+when interrupt flag is 1, the emulator continually checks first 256 bytes of this file c:\emu8086.hw
+if any of the bytes is none-zero the microprocessor transfers control
+to an interrupt handler that matches the trigerring byte offset in emu8086.hw file (0 to 255)
+according to the interrupt vector table (memory 0000-0400h) and resets the byte in emu8086.hw to 00.
+
+
+tab codes (9) are expanded as specified by ascii standard. bell code (7) produces a short beep. for example:
+mov al, 7
+mov ah, 0eh
+int 10h
+
+startup window can be turned off/on from emu8086.ini
+
+
+"#mem=..." directive can be used to write values to memory before program starts
+(for .bin files that run in the emulator only).
+#MEM=nnnnn,[bytestring]-nnnn:nnnn,[bytestring]#
+for example:
+#MEM=0100:FFFE,00FF-0100:FF00,F4#
+all values must be in hex. address can be physical (nnnnn) or logical (nnnn:nnnn).
+ "-" separates the entries. spaces inside byte strings are ignored.
+default.binf is updated to automatically stop the program when RET instruction is executed.
+ SP register is set to FFFE. MEM directive sets value FF00 to top of the stack 
+(it is used by first RET to set IP register to that offset). 
+F4 is an opcode for HLT instruction. F4 is written to offset FF00. 
+
+java executable files (.jar and .class) are automatically added to virtual devices menu of the emulator.
+
+localizations are improved:
+http://www.emu8086.com/dr/loc/
+
+automated translation tool is to be developed in the near future to help the translators.
+
+the log button is renamed to debug. binary/ascii dump is enabled, for example:
+d ds:[bx]
+d ds:0100
+d 100
+
+more improvements to extended debug (debug commands and output may not be compatible
+with the original Microsoft debug because of the enhanced features).
+for more information visit:
+http://www.emu8086.com/dr/debug.html
+
+stop on condition feature is added to the emulator. it allows to stop the execution
+when a value of some register or byte in RAM changes or becomes equal to a specified expression.
+(accessible from [debug] -> [stop on condition] menu).
+
+assembler code can be exported to html format for publishing or printing.
+click file->export to html...
+
+
+
